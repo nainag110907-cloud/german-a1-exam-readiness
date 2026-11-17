@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German A1 Exam Readiness</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f6fb;padding:15px;color:#222}
+.container{max-width:700px;margin:auto;background:white;padding:22px;border-radius:14px}
+h1{color:#263b70;text-align:center}
+.question{padding:14px;margin:12px 0;background:#f1f4fa;border-radius:9px}
+label{display:block;margin:9px 0;cursor:pointer}
+button{background:#263b70;color:white;border:0;padding:12px 22px;border-radius:7px;font-size:16px;cursor:pointer}
+#results{display:none;margin-top:20px;padding:16px;background:#eaf4ee;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Am I Exam-Ready?</h1>
+<p>German A1 Self-Assessment – Vocabulary, Grammar and Reading</p>
+<div id="quiz"></div>
+<button onclick="finishQuiz()">Submit Assessment</button>
+<div id="results"></div>
+</div>
+
+<script>
+const questions = [
+["Vocabulary","What does Apfel mean?",["Apple","Book","Water"],0],
+["Vocabulary","How do you say Good morning in German?",["Gute Nacht","Guten Morgen","Auf Wiedersehen"],1],
+["Vocabulary","What does Krankenhaus mean?",["School","Hospital","Market"],1],
+["Vocabulary","What does Danke mean?",["Please","Sorry","Thank you"],2],
+
+["Grammar","Choose the correct sentence.",["Ich bin Student","Ich bist Student","Ich sind Student"],0],
+["Grammar","Choose the correct form: Du ___ Deutsch.",["spreche","sprichst","sprechen"],1],
+["Grammar","Which article is correct?",["Die Tisch","Das Tisch","Der Tisch"],2],
+["Grammar","Choose the correct form: Wir ___ in Delhi.",["wohne","wohnt","wohnen"],2],
+
+["Reading","Read: Anna ist 20 Jahre alt. Wie heißt das Mädchen?",["Maria","Anna","Lisa"],1],
+["Reading","Wie alt ist Anna?",["18 Jahre","20 Jahre","25 Jahre"],1],
+["Reading","Wo wohnt Anna?",["Berlin","München","Hamburg"],0],
+["Reading","Was macht Anna mit ihren Freunden?",["Sie lernt Deutsch","Sie spielt Tennis","Sie trifft ihre Freunde"],2]
+];
+
+const quiz=document.getElementById("quiz");
+
+questions.forEach((q,i)=>{
+ let html=`<div class="question"><b>${i+1}. ${q[1]}</b>`;
+ if(i===8) html+=`<p>Anna ist 20 Jahre alt und wohnt in Berlin. Am Wochenende trifft sie ihre Freunde.</p>`;
+ q[2].forEach((option,j)=>{
+  html+=`<label><input type="radio" name="q${i}" value="${j}"> ${option}</label>`;
+ });
+ html+="</div>";
+ quiz.innerHTML+=html;
+});
+
+function finishQuiz(){
+ let total=0;
+ let skills={Vocabulary:0,Grammar:0,Reading:0};
+ questions.forEach((q,i)=>{
+  const selected=document.querySelector(`input[name="q${i}"]:checked`);
+  if(selected && Number(selected.value)===q[3]){
+   total++;
+   skills[q[0]]++;
+  }
+ });
+
+ let level=total>=10?"Good progress – practise full mock exams.":total>=7?"Almost ready – revise your weaker areas.":"More preparation needed – strengthen your A1 basics.";
+
+ let weakest=Object.keys(skills).sort((a,b)=>skills[a]-skills[b]);
+ let recommendations={
+  Vocabulary:"Revise everyday German words, greetings, numbers and common objects.",
+  Grammar:"Practise articles, pronouns and basic present-tense verb conjugations.",
+  Reading:"Read short A1 German passages and practise finding names, ages and places."
+ };
+
+ let result=document.getElementById("results");
+ result.style.display="block";
+ result.innerHTML=`<h2>Your Results</h2>
+ <h3>Overall Score: ${total}/12</h3>
+ <p><b>Readiness:</b> ${level}</p>
+ <h3>Skill Breakdown</h3>
+ <p>Vocabulary: ${skills.Vocabulary}/4</p>
+ <p>Grammar: ${skills.Grammar}/4</p>
+ <p>Reading: ${skills.Reading}/4</p>
+ <h3>Your Practice Recommendations</h3>
+ <p>${recommendations[weakest[0]]}</p>
+ <p>${recommendations[weakest[1]]}</p>
+ <p><i>This is a practice self-assessment, not an official Goethe or ÖSD exam prediction.</i></p>`;
+ result.scrollIntoView({behavior:"smooth"});
+}
+</script>
+</body>
+</html>
